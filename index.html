@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة مستكشف الموارد في مصر 🇪🇬</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Cairo -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        amberGold: '#F59E0B',
+                        egyptRed: '#C8102E',
+                        egyptGold: '#D4AF37',
+                        customGreen: '#10B981',
+                        customBlue: '#3B82F6',
+                        customPurple: '#8B5CF6'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #FDE68A 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable-certificate, #printable-certificate * { visibility: visible; }
+            #printable-certificate {
+                position: absolute; left: 0; top: 0; width: 100%; border: none !important; box-shadow: none !important;
+            }
+            .no-print { display: none !important; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FEF3C7; }
+        ::-webkit-scrollbar-thumb { background: #F59E0B; border-radius: 4px; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between text-gray-800 p-2 sm:p-4">
+
+    <!-- Header / Navbar -->
+    <header class="max-w-5xl mx-auto w-full glass-card rounded-2xl p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-b-4 border-amber-500">
+        <div class="flex items-center gap-3">
+            <div class="bg-amber-500 text-white p-3 rounded-2xl text-2xl shadow-md floating">
+                🇪🇬
+            </div>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-black text-amber-800">رحلة مستكشف الموارد في مصر</h1>
+                <p class="text-xs sm:text-sm font-bold text-amber-600">الصف الخامس الابتدائي | إعداد المعلمة: أمينة 👩‍🏫</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3 bg-amber-100/80 px-3 sm:px-4 py-2 rounded-xl border border-amber-300">
+            <div class="text-right">
+                <p class="text-xs text-amber-700 font-bold">المستكشف البطل:</p>
+                <p id="nav-player-name" class="text-sm font-black text-amber-900">زائر</p>
+            </div>
+            <div class="h-8 w-px bg-amber-300"></div>
+            <div class="text-center">
+                <p class="text-xs text-amber-700 font-bold">النقاط الكلية</p>
+                <p id="nav-total-score" class="text-lg font-black text-amber-600">0 / 200</p>
+            </div>
+            <button onclick="showLeaderboard()" class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-xl shadow transition mr-1" title="لوحة المتصدرين">
+                🏆 المتصدرون
+            </button>
+            <button id="audio-toggle-btn" onclick="toggleAudio()" class="text-amber-700 hover:text-amber-900 transition text-xl p-1" title="تشغيل/إيقاف الصوت">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+        <!-- SCREEN 1: WELCOME -->
+        <section id="screen-welcome" class="glass-card rounded-3xl p-6 sm:p-10 text-center shadow-2xl relative overflow-hidden my-auto">
+            <div class="text-6xl sm:text-7xl mb-4 floating">⛏️ ⚡ ☀️ 🏆</div>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-amber-900 mb-3">مرحباً بك في مغامرة استكشاف ثروات مصر!</h2>
+            <p class="text-sm sm:text-base text-gray-700 max-w-2xl mx-auto mb-6 leading-relaxed">
+                انضم إلى المعلمة <span class="font-bold text-amber-700">أمينة</span> في خوض 4 مستويات شيقة لاكتشاف المعادن ومصادر الطاقة في وطننا الحبيب مصر. اجمع النقاط واكسب الشارات وانتقل حتى تحوز وسام المستكشف الذهبي!
+            </p>
+
+            <div class="bg-amber-50 rounded-2xl p-4 max-w-xl mx-auto mb-8 border border-amber-200 text-right text-xs sm:text-sm text-gray-700 space-y-2">
+                <p class="font-bold text-amber-800 text-sm mb-1 text-center">📜 قواعد واشتراطات المغامرة:</p>
+                <p class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> يتكون كل مستوى من 10 أسئلة متنوعة (5 درجات لكل سؤال = 50 درجة).</p>
+                <p class="flex items-center gap-2"><i class="fas fa-star text-amber-500"></i> **شرط الانتقال للمستوى التالي:** الحصول على 25 درجة على الأقل (50%).</p>
+                <p class="flex items-center gap-2"><i class="fas fa-lightbulb text-amber-600"></i> يتضمن التطبيق تفسيراً تعليمياً مهماً للإجابات عند الخطأ لتصحيح المفاهيم.</p>
+            </div>
+
+            <form onsubmit="startGame(event)" class="max-w-md mx-auto space-y-4">
+                <div>
+                    <label for="player-name-input" class="block text-right font-bold text-gray-700 mb-1 text-sm">ادخل اسمك الكريم يا بطل:</label>
+                    <input type="text" id="player-name-input" required placeholder="اكتب اسمك الثلاثي هنا..." class="w-full px-4 py-3 rounded-xl border-2 border-amber-300 focus:border-amber-500 focus:outline-none font-bold text-center text-lg text-amber-900 shadow-inner">
+                </div>
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xl rounded-2xl shadow-lg transition">
+                    ابدأ المغامرة الآن 🚀
+                </button>
+            </form>
+        </section>
+
+        <!-- SCREEN 2: LEVEL DASHBOARD -->
+        <section id="screen-levels" class="hidden glass-card rounded-3xl p-6 sm:p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black text-amber-900">خريطة مستويات المغامرة 🗺️</h2>
+                <p class="text-sm text-gray-600 font-bold mt-1">اختر المستوى المتاح لك للبدء في جمع النقاط والشارات!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="levels-grid">
+                <!-- Level 1 Card -->
+                <div id="level-card-1" class="border-2 border-amber-400 bg-amber-50/80 rounded-2xl p-5 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-3xl">⛏️</span>
+                            <span id="badge-status-1" class="text-xs font-bold px-3 py-1 rounded-full bg-gray-200 text-gray-600">متاح</span>
+                        </div>
+                        <h3 class="text-xl font-black text-amber-900 mb-1">المستوى الأول: مستكشف المعادن</h3>
+                        <p class="text-xs text-gray-600 mb-3">تحديد أماكن استخراج أهم المعادن ومصادر الطاقة على خريطة مصر.</p>
+                        <div class="text-xs font-bold text-amber-700 bg-amber-100 p-2 rounded-lg mb-4">🏆 الشارة: شارة خبير التعدين ⛏️</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>أعلى نتيجة:</span>
+                            <span id="level-score-1">0 / 50</span>
+                        </div>
+                        <button onclick="startLevel(1)" id="btn-start-level-1" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow transition">ابدأ المستوى الأول 🎯</button>
+                    </div>
+                </div>
+
+                <!-- Level 2 Card -->
+                <div id="level-card-2" class="border-2 border-gray-200 bg-gray-50 rounded-2xl p-5 shadow-md flex flex-col justify-between opacity-75">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-3xl">⚡</span>
+                            <span id="badge-status-2" class="text-xs font-bold px-3 py-1 rounded-full bg-gray-200 text-gray-500"><i class="fas fa-lock ml-1"></i> مغلق</span>
+                        </div>
+                        <h3 class="text-xl font-black text-gray-800 mb-1">المستوى الثاني: صياد الطاقة</h3>
+                        <p class="text-xs text-gray-600 mb-3">المقارنة والتصنيف بين مصادر الطاقة المتجددة وغير المتجددة.</p>
+                        <div class="text-xs font-bold text-gray-600 bg-gray-200 p-2 rounded-lg mb-4">🏆 الشارة: شارة صديق البيئة 🌿</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1 text-gray-500">
+                            <span>أعلى نتيجة:</span>
+                            <span id="level-score-2">0 / 50</span>
+                        </div>
+                        <button onclick="startLevel(2)" id="btn-start-level-2" disabled class="w-full py-2.5 bg-gray-300 text-gray-500 font-bold rounded-xl cursor-not-allowed">مغلق (يتطلب 25 نقطة في لـ 1) 🔒</button>
+                    </div>
+                </div>
+
+                <!-- Level 3 Card -->
+                <div id="level-card-3" class="border-2 border-gray-200 bg-gray-50 rounded-2xl p-5 shadow-md flex flex-col justify-between opacity-75">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-3xl">☀️</span>
+                            <span id="badge-status-3" class="text-xs font-bold px-3 py-1 rounded-full bg-gray-200 text-gray-500"><i class="fas fa-lock ml-1"></i> مغلق</span>
+                        </div>
+                        <h3 class="text-xl font-black text-gray-800 mb-1">المستوى الثالث: بطل الطاقة النظيفة</h3>
+                        <p class="text-xs text-gray-600 mb-3">استنتاج الأهمية الاقتصادية للمعادن ومفهوم عملية التعدين.</p>
+                        <div class="text-xs font-bold text-gray-600 bg-gray-200 p-2 rounded-lg mb-4">🏆 الشارة: شارة حارس الموارد 🛡️</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1 text-gray-500">
+                            <span>أعلى نتيجة:</span>
+                            <span id="level-score-3">0 / 50</span>
+                        </div>
+                        <button onclick="startLevel(3)" id="btn-start-level-3" disabled class="w-full py-2.5 bg-gray-300 text-gray-500 font-bold rounded-xl cursor-not-allowed">مغلق (يتطلب 25 نقطة في لـ 2) 🔒</button>
+                    </div>
+                </div>
+
+                <!-- Level 4 Card -->
+                <div id="level-card-4" class="border-2 border-gray-200 bg-gray-50 rounded-2xl p-5 shadow-md flex flex-col justify-between opacity-75">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-3xl">🏆</span>
+                            <span id="badge-status-4" class="text-xs font-bold px-3 py-1 rounded-full bg-gray-200 text-gray-500"><i class="fas fa-lock ml-1"></i> مغلق</span>
+                        </div>
+                        <h3 class="text-xl font-black text-gray-800 mb-1">المستوى الرابع: مهندس الاستدامة</h3>
+                        <p class="text-xs text-gray-600 mb-3">توضيح جهود الدولة والمواطنين في ترشيد وحفظ الموارد.</p>
+                        <div class="text-xs font-bold text-gray-600 bg-gray-200 p-2 rounded-lg mb-4">🏆 الوسام: وسام المستكشف الذهبي 🏆</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1 text-gray-500">
+                            <span>أعلى نتيجة:</span>
+                            <span id="level-score-4">0 / 50</span>
+                        </div>
+                        <button onclick="startLevel(4)" id="btn-start-level-4" disabled class="w-full py-2.5 bg-gray-300 text-gray-500 font-bold rounded-xl cursor-not-allowed">مغلق (يتطلب 25 نقطة في لـ 3) 🔒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 border-t border-amber-200 pt-6">
+                <button onclick="showLeaderboard()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow transition">
+                    عرض لوحة المتصدرين 🏆
+                </button>
+                <button id="btn-final-cert" onclick="showFinalResults()" disabled class="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black rounded-2xl shadow-lg opacity-50 cursor-not-allowed transition">
+                    عرض النتيجة النهائية والشهادة 📜
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: ACTIVE QUIZ LEVEL -->
+        <section id="screen-quiz" class="hidden glass-card rounded-3xl p-4 sm:p-8 shadow-2xl">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-4 pb-3 border-b border-gray-200">
+                <div>
+                    <span id="quiz-level-title" class="text-lg sm:text-xl font-black text-amber-900">المستوى الأول</span>
+                    <span id="quiz-badge-name" class="mr-2 text-xs font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-lg"></span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-sm font-bold text-gray-700">النقاط الحالية: <span id="quiz-current-score" class="text-amber-600 text-lg font-black">0</span> / 50</div>
+                    <button onclick="quitQuiz()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded-xl transition">انسحاب ✖️</button>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex justify-between text-xs font-bold text-gray-600 mb-1">
+                    <span>التقدم في المستوى:</span>
+                    <span id="quiz-progress-text">السؤال 1 من 10</span>
+                </div>
+                <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-gradient-to-r from-amber-400 to-amber-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="bg-white rounded-2xl p-5 sm:p-8 border-2 border-amber-200 shadow-sm mb-4 min-h-[200px] flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span id="question-type-badge" class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full">اختيار من متعدد</span>
+                        <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">+5 نقاط</span>
+                    </div>
+                    <h3 id="question-text" class="text-lg sm:text-xl font-extrabold text-gray-800 leading-relaxed">جارٍ تحميل السؤال...</h3>
+                </div>
+
+                <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6"></div>
+            </div>
+
+            <!-- Feedback & Explanation Box -->
+            <div id="feedback-box" class="hidden p-4 rounded-2xl text-right mb-4 transition-all border shadow-inner">
+                <div id="feedback-title" class="font-black text-lg mb-1"></div>
+                <div id="feedback-explanation" class="text-sm text-gray-800 leading-relaxed bg-white/80 p-3 rounded-xl border border-gray-200 mt-2"></div>
+            </div>
+
+            <div class="flex justify-end">
+                <button id="btn-next-question" onclick="nextQuestion()" disabled class="px-6 py-3 bg-gray-300 text-gray-500 font-bold rounded-xl cursor-not-allowed transition">
+                    السؤال التالي <i class="fas fa-arrow-left mr-1"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: LEVEL RESULT -->
+        <section id="screen-level-result" class="hidden glass-card rounded-3xl p-6 sm:p-10 text-center shadow-2xl my-auto">
+            <div id="result-icon" class="text-6xl mb-4 floating">🎉</div>
+            <h2 id="result-title" class="text-2xl sm:text-3xl font-black text-amber-900 mb-2">أحسنت يا بطل!</h2>
+            <p id="result-message" class="text-gray-700 text-base mb-6">لقد أكملت المستوى بنجاح وحصلت على النتيجة التالية:</p>
+
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-6 max-w-sm mx-auto mb-6">
+                <p class="text-xs font-bold text-gray-600 mb-1">درجتك في هذا المستوى:</p>
+                <p id="result-score-display" class="text-4xl font-black text-amber-600 mb-2">0 / 50</p>
+                <p id="result-pass-status" class="text-xs font-bold text-green-700 bg-green-100 py-1 px-3 rounded-full inline-block">تم الاجتياز بنجاح!</p>
+            </div>
+
+            <div id="result-badge-card" class="hidden bg-gradient-to-r from-amber-100 to-amber-200 border border-amber-300 rounded-2xl p-4 max-w-sm mx-auto mb-6 flex items-center justify-center gap-3">
+                <span id="result-badge-icon" class="text-3xl">⛏️</span>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-amber-800">الشارة المكتسبة الجديدة:</p>
+                    <p id="result-badge-title" class="text-sm font-black text-amber-950">شارة خبير التعدين</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="retryLevel()" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition">إعادة المستوى 🔄</button>
+                <button onclick="returnToLevelsMap()" class="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl shadow transition">متابعة لخريطة المستويات 🗺️</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: LEADERBOARD BOARD -->
+        <section id="screen-leaderboard" class="hidden glass-card rounded-3xl p-6 sm:p-8 shadow-2xl my-auto">
+            <div class="text-center mb-6">
+                <span class="text-5xl floating">🏆</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-amber-900 mt-2">لوحة متصدري استكشاف مصر</h2>
+                <p class="text-xs sm:text-sm text-gray-600 font-bold">لوحة الشرف لأعلى المستكشفين جمعاً للنقاط والأوسمة</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto overflow-x-auto mb-6">
+                <table class="w-full text-sm text-center border-collapse bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <thead>
+                        <tr class="bg-amber-500 text-white font-bold">
+                            <th class="p-3 border-b">الترتيب</th>
+                            <th class="p-3 border-b">اسم المستكشف</th>
+                            <th class="p-3 border-b">إجمالي النقاط</th>
+                            <th class="p-3 border-b">الشارات والأوسمة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-table-body" class="divide-y divide-amber-100">
+                        <!-- Dynamic Leaderboard Rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center">
+                <button onclick="returnToLevelsMap()" class="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow transition">
+                    العودة لخريطة المستويات 🗺️
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 6: CERTIFICATE -->
+        <section id="screen-certificate" class="hidden my-auto py-4">
+            <div class="no-print max-w-3xl mx-auto flex justify-between items-center mb-4">
+                <button onclick="returnToLevelsMap()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl text-sm transition"><i class="fas fa-arrow-right ml-1"></i> العودة للخريطة</button>
+                <button onclick="window.print()" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-sm shadow transition">طباعة / حفظ الشهادة PDF 🖨️</button>
+            </div>
+
+            <div id="printable-certificate" class="max-w-3xl mx-auto bg-white border-8 border-amber-500 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden text-center">
+                <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none"><span class="text-[180px]">🇪🇬</span></div>
+                <div class="border-b-2 border-amber-300 pb-4 mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-amber-800">جمهورية مصر العربية</span>
+                        <span class="text-2xl">🇪🇬</span>
+                        <span class="text-xs font-bold text-amber-800">مادة الدراسات الاجتماعية</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-black text-amber-900 font-serif">🏆 شهادة شرف واستحقاق 🏆</h2>
+                    <p class="text-xs sm:text-sm font-bold text-amber-600 mt-1">رحلة مستكشف الموارد في مصر - الصف الخامس الابتدائي</p>
+                </div>
+
+                <div class="space-y-4 my-6">
+                    <p class="text-sm text-gray-700">تشهد المعلمة <span class="font-extrabold text-amber-800 text-base">أمينة</span> بأن المستكشف البطل /</p>
+                    <h3 id="cert-player-name" class="text-2xl sm:text-3xl font-black text-indigo-900 border-b-2 border-dashed border-indigo-300 inline-block px-8 py-1">اسم الطالب</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed max-w-xl mx-auto">قد أتم بنجاح واقتدار كافّة مستويات اللعبة التعليمية المخصصة لدرس <span class="font-bold text-amber-800">"الثروة المعدنية ومصادر الطاقة في مصر"</span> وأظهر تفوقاً واكتسب الأوسمة الشرفية التالية:</p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 max-w-xl mx-auto" id="cert-badges-grid"></div>
+
+                <div class="my-6 overflow-x-auto">
+                    <table class="w-full text-xs sm:text-sm text-center border-collapse border border-amber-200 rounded-xl overflow-hidden">
+                        <thead>
+                            <tr class="bg-amber-500 text-white font-bold">
+                                <th class="p-2 border border-amber-400">المستوى</th>
+                                <th class="p-2 border border-amber-400">اسم المستوى</th>
+                                <th class="p-2 border border-amber-400">الدرجة المكتسبة</th>
+                                <th class="p-2 border border-amber-400">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cert-table-body" class="bg-amber-50/50"></tbody>
+                        <tfoot>
+                            <tr class="bg-amber-100 font-black text-amber-900">
+                                <td colspan="2" class="p-2 border border-amber-300 text-left pl-4">المجموع الكلي:</td>
+                                <td id="cert-total-score-td" class="p-2 border border-amber-300">0 / 200</td>
+                                <td id="cert-final-status-td" class="p-2 border border-amber-300 text-green-700">مكتمل 🎖️</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-end border-t border-amber-200 pt-6 mt-8 text-xs font-bold text-gray-700">
+                    <div class="text-center">
+                        <p class="mb-2">تاريخ التتويج:</p>
+                        <p id="cert-date" class="text-amber-800 font-bold">2026/10/27</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-amber-600 mb-1">توقيع معلمة المادة:</p>
+                        <p class="text-base font-black text-amber-900">المعلمة أمينة 👩‍🏫</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-5xl mx-auto w-full text-center text-xs text-amber-800/80 py-3 mt-4 no-print border-t border-amber-200">
+        <p>تطبيق تفاعلي تعليمي لمادة الدراسات الاجتماعية - الصف الخامس الابتدائي © جميع الحقوق محفوظة</p>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        const gameConfig = { minPassScore: 25, pointsPerQuestion: 5, totalLevels: 4 };
+
+        const levelsData = {
+            1: {
+                id: 1,
+                title: "المستوى الأول: مستكشف المعادن ⛏️",
+                badgeName: "شارة خبير التعدين ⛏️",
+                badgeIcon: "⛏️",
+                questions: [
+                    { type: "mcq", q: "يُستخرج معدن الفوسفات في مصر من منطقة .......... بالصحراء الغربية.", options: ["أ. الواحات البحرية", "ب. أبو طرطور", "ج. أم بجمة", "د. جبل المغارة"], answer: 1, explanation: "يستخرج الفوسفات بشكل أساسي من هضبة **أبو طرطور** بالصحراء الغربية، بينما الواحات البحرية لاستخراج الحديد وأم بجمة للمنجنيز." },
+                    { type: "mcq", q: "يُستخرج معدن الحديد في مصر من منطقة .......... بالصحراء الغربية.", options: ["أ. أم بجمة", "ب. الواحات البحرية", "ج. منجم السكري", "د. أبو طرطور"], answer: 1, explanation: "تعد **الواحات البحرية** في الصحراء الغربية هي المنطقة الرئيسية لاستخراج خام الحديد في مصر." },
+                    { type: "mcq", q: "يُستخرج معدن الذهب في مصر من منجم السكري بالصحراء ..........", options: ["أ. الغربية", "ب. الشرقية", "ج. الشمالية", "د. الجنوبية"], answer: 1, explanation: "يقع منجم السكري في **الصحراء الشرقية** بالقرب من البحر الأحمر." },
+                    { type: "mcq", q: "يُستخرج معدن المنجنيز من منطقة أم بجمة بشبه جزيرة ..........", options: ["أ. سيناء", "ب. الصحراء الغربية", "ج. الصحراء الشرقية", "د. الدلتا"], answer: 0, explanation: "تُعتبر منطقة أم بجمة في **جنوب سيناء** هي المصدر الرئيس لاستخراج المنجنيز." },
+                    { type: "mcq", q: "يُستخرج معدن النحاس في مصر من محافظة ..........", options: ["أ. أسوان", "ب. البحر الأحمر", "ج. الجيزة", "د. شمال سيناء"], answer: 1, explanation: "ينتشر استخراج النحاس في محافظة **البحر الأحمر** بالصحراء الشرقية." },
+                    { type: "mcq", q: "يُطلق على عملية استخراج المعادن ومصادر الطاقة من باطن الأرض اسم ..........", options: ["أ. الزراعة", "ب. التعدين", "ج. التجارة", "د. السياحة"], answer: 1, explanation: "تعريف **التعدين** هو النشاط الاقتصادي المخصص لاستخراج المعادن ومصادر الطاقة من باطن الأرض." },
+                    { type: "tf", q: "التعدين هو عملية استخراج المعادن ومصادر الطاقة من باطن الأرض أو بالقرب من سطحها.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ هذا هو التعريف العلمي والمفهوم المباشر لعملية التعدين." },
+                    { type: "tf", q: "يُستخرج الفحم في مصر من منطقة جبل المغارة بشمال سيناء.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ يقع جبل المغارة في شمال سيناء ويعد أشهر مناطق استخراج الفحم." },
+                    { type: "tf", q: "يُعد حقل 'ظهر' في البحر المتوسط من أشهر حقول البترول في مصر.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ حقل 'ظهر' هو أكبر حقل للغاز الطبيعي في مصر والبحر المتوسط وليس للبترول." },
+                    { type: "tf", q: "يُستخرج معدن الفوسفات من منطقة الواحات البحرية بالصحراء الغربية.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ يُستخرج الفوسفات من أبو طرطور، بينما تُستخرج من الواحات البحرية خامات الحديد." }
+                ]
+            },
+            2: {
+                id: 2,
+                title: "المستوى الثاني: صياد الطاقة ⚡",
+                badgeName: "شارة صديق البيئة 🌿",
+                badgeIcon: "🌿",
+                questions: [
+                    { type: "mcq", q: "توجد محطة توليد طاقة الرياح (جبل الزيت) في محافظة ..........", options: ["أ. أسوان", "ب. البحر الأحمر", "ج. الجيزة", "د. شمال سيناء"], answer: 1, explanation: "تقع محطة جبل الزيت لتوليد الكهرباء من الرياح في محافظة **البحر الأحمر**." },
+                    { type: "mcq", q: "أي مما يلي يُعد من مصادر الطاقة المتجددة الصديقة للبيئة؟", options: ["أ. الفحم", "ب. البترول", "ج. الرياح", "د. الغاز الطبيعي"], answer: 2, explanation: "طاقة **الرياح** مصدر متجدد لا ينفد ولا يلوث البيئة بخلاف الوقود الأحفوري." },
+                    { type: "mcq", q: "توجد أكبر محطة لتوليد الطاقة الشمسية في مصر بقرية بنبان في محافظة ..........", options: ["أ. الجيزة", "ب. أسوان", "ج. البحر الأحمر", "د. القاهرة"], answer: 1, explanation: "مجمع بنبان للطاقة الشمسية يقع في محافظة **أسوان** وتعد من أكبر المحطات عالمياً." },
+                    { type: "mcq", q: "أيٌّ من مصادر الطاقة التالية ينفد مع الاستخدام ويُلوث البيئة؟", options: ["أ. الشمس", "ب. البترول", "ج. الرياح", "د. المياه"], answer: 1, explanation: "عد **البترول** من مصادر الطاقة غير المتجددة التي تنفد بكثرة الاستهلاك وتسبب تلوثاً بيئياً." },
+                    { type: "mcq", q: "تقع محطة الكريمات لتوليد الكهرباء من الطاقة الشمسية في محافظة ..........", options: ["أ. الجيزة", "ب. أسوان", "ج. الإسكندرية", "د. قنا"], answer: 0, explanation: "محطة الكريمات الشهيرة تقع ضمن نطاق محافظة **الجيزة**." },
+                    { type: "tf", q: "مصادر الطاقة المتجددة هي مصادر نظيفة لا تنفد ولا تلوث البيئة.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ كالشمس والرياح والمياه." },
+                    { type: "tf", q: "تتميز مصادر الطاقة غير المتجددة بأنها صديقة للبيئة وغير ملوثة.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ الطاقة غير المتجددة (فحم، بترول) تلوث البيئة وتنفد بالاستهلاك." },
+                    { type: "tf", q: "تُولد الطاقة الكهرومائية في مصر من محطة السد العالي وخزان أسوان.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ تُولد مصر الطاقة الكهرومائية النظيفة من محطات السد العالي وخزان أسوان وقناطر إسنا." },
+                    { type: "tf", q: "البترول والغاز الطبيعي من مصادر الطاقة المتجددة التي لا تنفد مع الاستخدام.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ البترول والغاز الطبيعي من الموارد الفانية وغير المتجددة." },
+                    { type: "tf", q: "تُعد طاقة الرياح والطاقة الشمسية من مصادر الطاقة المتجددة النظيفة.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ حمايتهما للبيئة واستدامتهما تجعلهما طاقة نظيفة ورئيسية." }
+                ]
+            },
+            3: {
+                id: 3,
+                title: "المستوى الثالث: بطل الطاقة النظيفة ☀️",
+                badgeName: "شارة حارس الموارد 🛡️",
+                badgeIcon: "🛡️",
+                questions: [
+                    { type: "mcq", q: "يدخل معدن الفوسفات بشكل أساسي في صناعة ..........", options: ["أ. أسلاك الكهرباء", "ب. الأسمدة الكيماوية", "ج. الحلي", "د. السيارات"], answer: 1, explanation: "الفوسفات هو الركيزة الأساسية لصناعة **الأسمدة الكيماوية** والمبيدات الحشرية." },
+                    { type: "mcq", q: "يُستخدم معدن المنجنيز في صناعة الصلب و ..........", options: ["أ. السبائك", "ب. المبيدات", "ج. الدهانات", "د. الحلي"], answer: 2, explanation: "يُدخل المنجنيز في صناعة الحديد والصلب وصناعة **الدهانات** والطلاء." },
+                    { type: "mcq", q: "يدخل معدن النحاس في صناعة ..........", options: ["أ. أسلاك الكهرباء والسبائك", "ب. الأسمدة والمبيدات", "ج. الدهانات والصلب", "د. الحلي والمجوهرات"], answer: 0, explanation: "يتميز النحاس بتوصيله العالي للكهرباء لذا يصنع منه **أسلاك الكهرباء والسبائك ومقابض الأبواب**." },
+                    { type: "mcq", q: "يدخل معدن الذهب في صناعة الحلي وبعض أنواع ..........", options: ["أ. السيارات", "ب. الأدوية وعلاج الأمراض", "ج. الأسمدة", "د. الطائرات"], answer: 1, explanation: "تُستخدم جزيئات الذهب الدقيقة في **صناعة بعض الأدوية** وعلاج بعض الأورام بجانب الحلي." },
+                    { type: "mcq", q: "تسهم الثروة المعدنية ومصادر الطاقة في توفير .......... للشباب.", options: ["أ. وسائل ترفيه", "ب. فرص عمل", "ج. مباني مدرسية", "د. وسائل نقل"], answer: 1, explanation: "تنشيط مشروعات التعدين والطاقة يوفر آلاف **فرص العمل** للشباب المصري." },
+                    { type: "tf", q: "يُقصد بالتعدين استخراج المعادن ومصادر الطاقة من باطن الأرض أو بالقرب من سطحها.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ وهي العملية الاستخراجية الحيوية للاقتصاد." },
+                    { type: "tf", q: "يدخل معدن النحاس في صناعة الأسمدة الكيماوية والمبيدات الحشرية.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ معدن الفوسفات هو الذي يدخل في صناعة الأسمدة والمبيدات." },
+                    { type: "tf", q: "يُستخدم الحديد في صناعة الآلات والحديد والصلب.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ الحديد هو أساس الصناعات الثقيلة والآلات وقضبان السكك الحديدية." },
+                    { type: "tf", q: "تسهم الأنشطة التعدينية ومصادر الطاقة في دعم الدخل القومي وزيادة الصادرات المصرية.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ ترفد الخزانة العامة بالعملات الأجنبية وتدعم الاقتصاد." },
+                    { type: "tf", q: "لا توجد أي أهمية اقتصادية لمعادن الذهب والحديد في مصر.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ الذهب والحديد من أهم الركائز الصناعية والاقتصادية لمصر." }
+                ]
+            },
+            4: {
+                id: 4,
+                title: "المستوى الرابع: مهندس الاستدامة 🏆",
+                badgeName: "وسام المستكشف الذهبي 🏆",
+                badgeIcon: "🏆",
+                questions: [
+                    { type: "mcq", q: "من جهود الدولة المصرية في ترشيد استهلاك الطاقة ..........", options: ["أ. إطفاء الأنوار غير الضرورية", "ب. التوسع في استخدام الطاقة المتجددة", "ج. الإفراط في استخدام البنزين", "د. ترك الأجهزة تعمل طوال الوقت"], answer: 1, explanation: "تسعى الدولة لـ **التوسع في استخدام مصادر الطاقة المتجددة** النظيفة لترشيد استهلاك الوقود الأحفوري." },
+                    { type: "mcq", q: "تشجع الدولة المواطنين على استخدام وسائل النقل الجماعي الكهربائية بهدف ..........", options: ["أ. زيادة التلوث", "ب. ترشيد استهلاك الوقود وحماية البيئة", "ج. إهدار الموارد", "د. زيادة تكلفة النقل"], answer: 1, explanation: "الهدف الرئييسي هو **ترشيد استهلاك الوقود تقليل الانبعاثات الحارقة وحماية البيئة**." },
+                    { type: "mcq", q: "يعني مفهوم 'التنمية المستدامة' تلبية احتياجات الجيل الحالي دون التضحية بحقوق ..........", options: ["أ. الأجيال القادمة", "ب. الدول المجاورة", "ج. المصانع والشركات", "د. المستثمرين فقط"], answer: 0, explanation: "التنمية المستدامة تضمن الحفاظ على موارد كوكب الأرض وحقوق **الأجيال القادمة**." },
+                    { type: "mcq", q: "أي من الآتي يُعتبر سلوكاً إيجابياً للمواطن لترشيد استهلاك الكهرباء في منزله؟", options: ["أ. ترك المصابيح مضاءة نهاراً", "ب. إطفاء الأجهزة الكهربائية غير المستخدمة", "ج. تشغيل المكيفات طوال اليوم بدون إغلاق النوافذ", "د. استخدام المصابيح التقليدية المهدِرة"], answer: 1, explanation: "**إطفاء الأجهزة الكهربائية والمصابيح في الغرف غير المشغولة** هو أسلوب ترشيد واعي." },
+                    { type: "mcq", q: "أنشأت مصر المدن الذكية المستدامة مثل مدينة .......... لاعتمادها على الطاقة النظيفة.", options: ["أ. العاصمة الإدارية الجديدة", "ب. المناطق العشوائية القديمة", "ج. المناطق النائية غير المخططة", "د. القرى السياحية الساحلية"], answer: 0, explanation: "**العاصمة الإدارية الجديدة** صُممت كمدينة خضراء ذكية تعتمد على التكنولوجيا والمباني المستدامة." },
+                    { type: "tf", q: "تعمل الدولة على التوسع في استخدام وسائل النقل المستدامة الصديقة للبيئة مثل المونوريل والقطار الكهربائي.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ للحد من التلوث والاعتماد على الطاقة الكهربائية النظيفة." },
+                    { type: "tf", q: "ترشيد استهلاك الموارد الطبيعية يؤدي إلى نفاذها بشكل أسرع وإضرار الأجيال القادمة.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ الترشيد يحمي الموارد ويطيل فترة بقائها واستدامتها للجميع." },
+                    { type: "tf", q: "تعتمد مشروعات الهيدروجين الأخضر في مصر على مصادر الطاقة المتجددة النظيفة.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ إنتاج الهيدروجين الأخضر يعتمد كلياً على كهرباء مستمدة من الشمس والرياح." },
+                    { type: "tf", q: "إغلاق صنبور المياه أثناء غسيل الأسنان لا علاقة له بترشيد الموارد في مصر.", options: ["صواب", "خطأ"], answer: 1, explanation: "عبارة **خاطئة**؛ هذا سلوك فردي مهم جداً في ترشيد المياه وحفظ الموارد." },
+                    { type: "tf", q: "إعادة تدوير المخلفات واستخدام المياه المُعالجة تُعد من صور تحقيق التنمية المستدامة.", options: ["صواب", "خطأ"], answer: 0, explanation: "عبارة **صحيحة**؛ إعادة التدوير والمعالجة تمنع الهدر وتعظم الاستفادة من الموارد." }
+                ]
+            }
+        };
+
+        let gameState = {
+            playerName: "",
+            currentLevel: 1,
+            currentQuestionIndex: 0,
+            levelScores: { 1: 0, 2: 0, 3: 0, 4: 0 },
+            unlockedLevels: { 1: true, 2: false, 3: false, 4: false },
+            badgesEarned: { 1: false, 2: false, 3: false, 4: false },
+            audioEnabled: true
+        };
+
+        let activeQuestions = [];
+        let selectedOptionIndex = null;
+        let isAnswerSubmitted = false;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!gameState.audioEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'incorrect') {
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            gameState.audioEnabled = !gameState.audioEnabled;
+            document.getElementById("audio-toggle-btn").innerHTML = gameState.audioEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
+        }
+
+        function showScreen(screenId) {
+            ['screen-welcome', 'screen-levels', 'screen-quiz', 'screen-level-result', 'screen-leaderboard', 'screen-certificate'].forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById("player-name-input").value.trim();
+            if (!nameInput) return;
+            gameState.playerName = nameInput;
+            document.getElementById("nav-player-name").innerText = gameState.playerName;
+            showScreen('screen-levels');
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            let totalScoreSum = 0;
+            for (let i = 1; i <= 4; i++) {
+                const score = gameState.levelScores[i];
+                totalScoreSum += score;
+                document.getElementById(`level-score-${i}`).innerText = `${score} / 50`;
+
+                const card = document.getElementById(`level-card-${i}`);
+                const btn = document.getElementById(`btn-start-level-${i}`);
+                const badgeStatus = document.getElementById(`badge-status-${i}`);
+
+                if (i === 1 || gameState.unlockedLevels[i]) {
+                    gameState.unlockedLevels[i] = true;
+                    card.classList.remove('opacity-75', 'bg-gray-50', 'border-gray-200');
+                    card.classList.add('bg-amber-50/80', 'border-amber-400');
+                    btn.disabled = false;
+                    btn.className = "w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow transition";
+                    btn.innerHTML = score > 0 ? "إعادة المستوى 🔄" : "ابدأ المستوى 🎯";
+
+                    if (gameState.badgesEarned[i]) {
+                        badgeStatus.className = "text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700";
+                        badgeStatus.innerHTML = '<i class="fas fa-check ml-1"></i> مكتسب';
+                    }
+                }
+            }
+
+            document.getElementById("nav-total-score").innerText = `${totalScoreSum} / 200`;
+            saveScoreToLeaderboard();
+
+            const finalCertBtn = document.getElementById("btn-final-cert");
+            if (gameState.levelScores[4] >= gameConfig.minPassScore) {
+                finalCertBtn.disabled = false;
+                finalCertBtn.className = "px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black rounded-2xl shadow-lg transition";
+            }
+        }
+
+        function startLevel(levelId) {
+            gameState.currentLevel = levelId;
+            gameState.currentQuestionIndex = 0;
+            activeQuestions = [...levelsData[levelId].questions];
+            document.getElementById("quiz-level-title").innerText = levelsData[levelId].title;
+            document.getElementById("quiz-badge-name").innerText = levelsData[levelId].badgeName;
+            document.getElementById("quiz-current-score").innerText = "0";
+            showScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswerSubmitted = false;
+            selectedOptionIndex = null;
+            const qObj = activeQuestions[gameState.currentQuestionIndex];
+
+            document.getElementById("quiz-progress-text").innerText = `السؤال ${gameState.currentQuestionIndex + 1} من ${activeQuestions.length}`;
+            document.getElementById("quiz-progress-bar").style.width = `${(gameState.currentQuestionIndex / activeQuestions.length) * 100}%`;
+            document.getElementById("question-type-badge").innerText = qObj.type === "mcq" ? "اختيار من متعدد" : "صواب أم خطأ";
+            document.getElementById("question-text").innerText = qObj.q;
+
+            const feedbackBox = document.getElementById("feedback-box");
+            feedbackBox.classList.add("hidden");
+
+            const nextBtn = document.getElementById("btn-next-question");
+            nextBtn.disabled = true;
+            nextBtn.className = "px-6 py-3 bg-gray-300 text-gray-500 font-bold rounded-xl cursor-not-allowed transition";
+
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            qObj.options.forEach((optText, index) => {
+                const optBtn = document.createElement("button");
+                optBtn.className = "option-btn text-right font-bold p-4 rounded-xl border-2 border-amber-200 bg-amber-50/50 hover:bg-amber-100/80 hover:border-amber-400 transition text-gray-800 text-sm sm:text-base flex items-center justify-between";
+                optBtn.innerHTML = `<span>${optText}</span> <i class="far border-2 border-amber-300 rounded-full w-5 h-5 flex items-center justify-center text-xs"></i>`;
+                optBtn.onclick = () => handleOptionSelect(index);
+                container.appendChild(optBtn);
+            });
+        }
+
+        function handleOptionSelect(index) {
+            if (isAnswerSubmitted) return;
+            selectedOptionIndex = index;
+            isAnswerSubmitted = true;
+
+            const qObj = activeQuestions[gameState.currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option-btn");
+            const feedbackBox = document.getElementById("feedback-box");
+            const feedbackTitle = document.getElementById("feedback-title");
+            const feedbackExplanation = document.getElementById("feedback-explanation");
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedOptionIndex === qObj.answer) {
+                // Correct
+                playSound('correct');
+                buttons[selectedOptionIndex].className = "text-right font-bold p-4 rounded-xl border-2 border-green-500 bg-green-100 text-green-900 text-sm sm:text-base flex items-center justify-between shadow";
+                buttons[selectedOptionIndex].querySelector("i").className = "fas fa-check-circle text-green-600 text-lg";
+
+                feedbackBox.className = "p-4 rounded-2xl text-right mb-4 transition-all bg-green-50 border-2 border-green-300";
+                feedbackTitle.className = "font-black text-lg text-green-800";
+                feedbackTitle.innerText = "🎯 إجابة صحيحة! أحسنت يا بطل (+5 نقاط)";
+                feedbackExplanation.innerHTML = `<b>توضيح المعلمة أمينة:</b> ${qObj.explanation}`;
+
+                let currentScore = parseInt(document.getElementById("quiz-current-score").innerText);
+                document.getElementById("quiz-current-score").innerText = currentScore + gameConfig.pointsPerQuestion;
+            } else {
+                // Incorrect - Show Explanation
+                playSound('incorrect');
+                buttons[selectedOptionIndex].className = "text-right font-bold p-4 rounded-xl border-2 border-red-500 bg-red-100 text-red-900 text-sm sm:text-base flex items-center justify-between shadow";
+                buttons[selectedOptionIndex].querySelector("i").className = "fas fa-times-circle text-red-600 text-lg";
+
+                // Highlight correct one
+                buttons[qObj.answer].className = "text-right font-bold p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-900 text-sm sm:text-base flex items-center justify-between";
+
+                feedbackBox.className = "p-4 rounded-2xl text-right mb-4 transition-all bg-red-50 border-2 border-red-300";
+                feedbackTitle.className = "font-black text-lg text-red-800";
+                feedbackTitle.innerText = "❌ إجابة خاطئة! ركّز في التفسير التالي:";
+                feedbackExplanation.innerHTML = `💡 <b>سبب الخطأ والإجابة الصحيحة:</b><br>${qObj.explanation}`;
+            }
+
+            feedbackBox.classList.remove("hidden");
+
+            const nextBtn = document.getElementById("btn-next-question");
+            nextBtn.disabled = false;
+            nextBtn.className = "px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow transition";
+        }
+
+        function nextQuestion() {
+            gameState.currentQuestionIndex++;
+            if (gameState.currentQuestionIndex < activeQuestions.length) {
+                loadQuestion();
+            } else {
+                finishLevel();
+            }
+        }
+
+        function finishLevel() {
+            const finalScore = parseInt(document.getElementById("quiz-current-score").innerText);
+            const levelId = gameState.currentLevel;
+
+            if (finalScore > gameState.levelScores[levelId]) {
+                gameState.levelScores[levelId] = finalScore;
+            }
+
+            const isPassed = finalScore >= gameConfig.minPassScore;
+            if (isPassed) {
+                gameState.badgesEarned[levelId] = true;
+                if (levelId < 4) gameState.unlockedLevels[levelId + 1] = true;
+            }
+
+            document.getElementById("result-score-display").innerText = `${finalScore} / 50`;
+            const badgeCard = document.getElementById("result-badge-card");
+
+            if (isPassed) {
+                document.getElementById("result-icon").innerText = "🎉";
+                document.getElementById("result-title").innerText = "أحسنت يا بطل المبارزة!";
+                document.getElementById("result-message").innerText = "لقد نجحت في اجتياز المستوى واكتساب الشارة التالية:";
+                document.getElementById("result-pass-status").className = "text-xs font-bold text-green-700 bg-green-100 py-1 px-3 rounded-full inline-block";
+                document.getElementById("result-pass-status").innerText = `تم الاجتياز بنجاح! (الحد الأدنى ${gameConfig.minPassScore})`;
+
+                badgeCard.classList.remove("hidden");
+                document.getElementById("result-badge-icon").innerText = levelsData[levelId].badgeIcon;
+                document.getElementById("result-badge-title").innerText = levelsData[levelId].badgeName;
+            } else {
+                document.getElementById("result-icon").innerText = "💪";
+                document.getElementById("result-title").innerText = "حاول مرة أخرى يا بطل!";
+                document.getElementById("result-message").innerText = "لم تصل للحد الأدنى المباشر للاجتياز، يمكنك إعادة المحاولة والتفوق!";
+                document.getElementById("result-pass-status").className = "text-xs font-bold text-red-700 bg-red-100 py-1 px-3 rounded-full inline-block";
+                document.getElementById("result-pass-status").innerText = `لم يتم الاجتياز (يتطلب ${gameConfig.minPassScore} نقطة)`;
+                badgeCard.classList.add("hidden");
+            }
+
+            updateDashboard();
+            showScreen('screen-level-result');
+        }
+
+        function retryLevel() {
+            startLevel(gameState.currentLevel);
+        }
+
+        function returnToLevelsMap() {
+            showScreen('screen-levels');
+        }
+
+        function quitQuiz() {
+            if (confirm("هل أنت تأكد من الانسحاب والعودة لخريطة المستويات؟")) {
+                returnToLevelsMap();
+            }
+        }
+
+        // Leaderboard LocalStorage Management
+        function saveScoreToLeaderboard() {
+            if (!gameState.playerName) return;
+            let board = JSON.parse(localStorage.getItem('egypt_explorer_leaderboard') || '[]');
+            
+            let total = Object.values(gameState.levelScores).reduce((a, b) => a + b, 0);
+            let badgesCount = Object.values(gameState.badgesEarned).filter(Boolean).length;
+
+            let existingIdx = board.findIndex(p => p.name === gameState.playerName);
+            if (existingIdx >= 0) {
+                if (total > board[existingIdx].score) {
+                    board[existingIdx].score = total;
+                    board[existingIdx].badges = badgesCount;
+                }
+            } else if (total > 0) {
+                board.push({ name: gameState.playerName, score: total, badges: badgesCount });
+            }
+
+            board.sort((a, b) => b.score - a.score);
+            localStorage.setItem('egypt_explorer_leaderboard', JSON.stringify(board.slice(0, 10)));
+        }
+
+        function showLeaderboard() {
+            saveScoreToLeaderboard();
+            let board = JSON.parse(localStorage.getItem('egypt_explorer_leaderboard') || '[]');
+            const tbody = document.getElementById("leaderboard-table-body");
+            tbody.innerHTML = "";
+
+            if (board.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-gray-500 font-bold">لا يوجد متصدرين مسجلين حتى الآن. كن أول من يسجل!</td></tr>`;
+            } else {
+                board.forEach((player, idx) => {
+                    let medal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
+                    tbody.innerHTML += `
+                        <tr class="${player.name === gameState.playerName ? 'bg-amber-100 font-black' : 'hover:bg-amber-50'}">
+                            <td class="p-3 text-lg font-bold">${medal}</td>
+                            <td class="p-3 font-bold text-amber-900">${player.name}</td>
+                            <td class="p-3 font-black text-amber-600">${player.score} / 200</td>
+                            <td class="p-3">${player.badges} / 4 شارات 🎖️</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            showScreen('screen-leaderboard');
+        }
+
+        function showFinalResults() {
+            document.getElementById("cert-player-name").innerText = gameState.playerName;
+            const tbody = document.getElementById("cert-table-body");
+            tbody.innerHTML = "";
+
+            let totalScore = 0;
+            for (let i = 1; i <= 4; i++) {
+                const score = gameState.levelScores[i];
+                totalScore += score;
+                const isPassed = gameState.badgesEarned[i];
+                tbody.innerHTML += `
+                    <tr class="border-b border-amber-200">
+                        <td class="p-2 border border-amber-200 font-bold">${i}</td>
+                        <td class="p-2 border border-amber-200 font-bold text-amber-900">${levelsData[i].title}</td>
+                        <td class="p-2 border border-amber-200 font-black text-amber-600">${score} / 50</td>
+                        <td class="p-2 border border-amber-200 font-bold ${isPassed ? 'text-green-700' : 'text-red-600'}">
+                            ${isPassed ? 'اجتياز 🟢' : 'لم يجتاز 🔴'}
+                        </td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById("cert-total-score-td").innerText = `${totalScore} / 200`;
+
+            const badgesGrid = document.getElementById("cert-badges-grid");
+            badgesGrid.innerHTML = "";
+            for (let i = 1; i <= 4; i++) {
+                if (gameState.badgesEarned[i]) {
+                    badgesGrid.innerHTML += `
+                        <div class="bg-amber-100 border border-amber-300 rounded-xl p-2 text-center shadow-sm">
+                            <span class="text-2xl">${levelsData[i].badgeIcon}</span>
+                            <p class="text-[10px] font-black text-amber-900 mt-1">${levelsData[i].badgeName}</p>
+                        </div>
+                    `;
+                }
+            }
+
+            showScreen('screen-certificate');
+        }
+    </script>
+</body>
+</html>
